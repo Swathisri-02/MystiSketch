@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { assets } from '../assets/assets'
 import { motion } from "motion/react"
+import { AppContext } from '../context/AppContext'
 
 const Result = () => {
 
@@ -8,9 +9,20 @@ const Result = () => {
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
+  const {generateImage} = useContext(AppContext)
 
   const onSubmitHandler = async (e) => {
+    e.preventDefault()
+    setLoading(true)
 
+    if(input){
+      const image = await generateImage(input)
+      if(image){
+        setImage(image)
+        setIsImageLoaded(true)
+      }
+    }
+    setLoading(false)
   }
 
   return (
@@ -22,7 +34,7 @@ const Result = () => {
     >
     <div>
       <div className='relative'>
-        <img src={assets.sample_img_1} alt="" className='max-w-sm rounded'/>
+        <img src={image} alt="" className='max-w-sm rounded'/>
         <span className={`absolute bottom-0 left-0 h-1 bg-blue-500 
         ${loading ? 'w-full transition-all duration-[10s]': 'w-0'}`}/>
       </div>
