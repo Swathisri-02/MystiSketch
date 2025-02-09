@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppContext'
 
 const Result = () => {
 
-  const [image, setImage] = useState(assets.sample_img_1)
+  const [image, setImage] = useState(assets.sample_img_3)
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
