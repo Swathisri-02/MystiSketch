@@ -1,5 +1,6 @@
-import { createContext , useState} from "react";
-
+import { createContext , useEffect, useState, useNavigate} from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
@@ -9,11 +10,58 @@ const AppContextProvider = (props) => {
 
     const [credits, setCredits] = useState(false)
     
-
+    const navigate = useNavigate;
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
+    const loadCreditsData = async () => {
+        try{
+            const {data} = await axios.get(backendUrl + '/api/user/credits',{headers:{token}})
+
+            if(data.success){
+                setCredits(data.credits)
+                setUser(data.user)
+            }
+        }
+        catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
+
+    const generateImage = async (prompt) => {
+        try{
+            const {data} = await axios.post(backendUrl + '/api/image/generate-image',{prompt},{headers:{token}})
+            
+            if(data.success){
+                loadCreditsData()
+                return data.resultImage
+            }
+            else{
+                toast.error(data.message);
+                loadCreditsData()
+                if (data.creditBalance === 0) {
+                    navigate('/buy')
+                }
+            }
+        }
+        catch (error) {
+            toast.error(error.message);
+        }
+    }
+
+    const logout = () => {
+        localStorage.removeItem('token')
+        setToken('')
+        setUser(null)
+    }
+    useEffect(() => {
+        if(token){
+            loadCreditsData()
+        }
+    },[token])  
+
     const value = {
-        user,setUser,showLogin,setShowLogin, backendUrl, token, setToken, credits, setCredits
+        user,setUser,showLogin,setShowLogin, backendUrl, token, setToken, credits, setCredits, loadCreditsData, logout, generateImage
     }
 
     return (
