@@ -10,7 +10,7 @@ const home = () => {
       <Header />
       <Steps />
       <Description />
-      <GenerateBtn />
+      <GenerateBtn /> 
       
     </div>
   )
