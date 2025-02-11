@@ -2,7 +2,7 @@ import { createContext , useEffect, useState, useNavigate} from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 export const AppContext = createContext();
-
+// to import everything from this file in other files, we need to export it as default 
 const AppContextProvider = (props) => {
     const [user, setUser] = useState(null);
     const [showLogin, setShowLogin] = useState(false)
